@@ -53,6 +53,22 @@ exports.getStudentProfileByUser = async function (req, res, next) {
 
 exports.createStudentProfile = async function (req, res, next) {
   try {
+    const student = await db.User.findById(req.body.studentId);
+
+    if (!student) {
+      return next({
+        status: 422,
+        message: "The student id does not exist.",
+      });
+    }
+
+    if (student.role != "student") {
+      return next({
+        status: 422,
+        message: "The student id is not a student.",
+      });
+    }
+
     await db.StudentProfile.create(req.body);
 
     return res
@@ -62,8 +78,14 @@ exports.createStudentProfile = async function (req, res, next) {
     if (err.name == "ValidationError") {
       const messageParts = err.message.split(": ");
 
-      err.message = messageParts[2];
+      if (messageParts[2].includes(", ")) {
+        err.message = "Please fill in required fields.";
+      } else {
+        err.message = messageParts[2];
+      }
     }
+
+    console.log(err);
 
     return next({
       status: 400,
@@ -102,7 +124,7 @@ exports.deleteStudentProfile = async function (req, res, next) {
     if (!profile) {
       return next({
         status: 422,
-        message: "Student profile is not exist.",
+        message: "Student profile does not exist.",
       });
     }
 

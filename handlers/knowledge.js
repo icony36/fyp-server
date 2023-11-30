@@ -44,7 +44,11 @@ exports.createKnowledge = async function (req, res, next) {
     } else if (err.name == "ValidationError") {
       const messageParts = err.message.split(": ");
 
-      err.message = messageParts[2];
+      if (messageParts[2].includes(", ")) {
+        err.message = "Please fill in required fields.";
+      } else {
+        err.message = messageParts[2];
+      }
     }
 
     return next({

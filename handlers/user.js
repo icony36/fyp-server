@@ -79,11 +79,19 @@ exports.deleteUser = async function (req, res, next) {
 exports.suspendUser = async function (req, res, next) {
   try {
     const id = req.params.id;
+    const { isSuspended } = req.body;
 
-    await db.User.findByIdAndUpdate(id, { isSuspended: req.body.isSuspended });
+    if (!isSuspended) {
+      return next({
+        status: 422,
+        message: "Please clarify is it suspended or not.",
+      });
+    }
+
+    await db.User.findByIdAndUpdate(id, { isSuspended });
 
     return res.status(200).json({
-      message: `User is ${req.body.isSuspended ? "suspended" : "unsuspended"}.`,
+      message: `User is ${isSuspended ? "suspended" : "unsuspended"}.`,
     });
   } catch (err) {
     return next({

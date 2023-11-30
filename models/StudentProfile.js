@@ -18,6 +18,7 @@ const studentProfileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: [true, "Student ID is required."],
+    cast: [null, (value) => `${value} is not a valid student id.`],
   },
 });
 

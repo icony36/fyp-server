@@ -14,7 +14,11 @@ exports.signup = async function (req, res, next) {
     } else if (err.name == "ValidationError") {
       const messageParts = err.message.split(": ");
 
-      err.message = messageParts[2];
+      if (messageParts[2].includes(", ")) {
+        err.message = "Please fill in required fields.";
+      } else {
+        err.message = messageParts[2];
+      }
     }
 
     return next({
@@ -59,13 +63,7 @@ exports.signin = async function (req, res, next) {
       // create token
       const token = createToken(id, role);
 
-      return res.status(200).json({
-        user: {
-          id,
-          role,
-        },
-        token,
-      });
+      return res.status(200).json({ token });
     } else {
       return next({
         status: 400,

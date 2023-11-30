@@ -17,6 +17,7 @@ const ticketSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: [true, "Student Id is required."],
+    cast: [null, (value) => `${value} is not a valid student id.`],
   },
   status: {
     type: String,
