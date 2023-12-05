@@ -52,6 +52,36 @@ exports.updateUser = async function (req, res, next) {
   }
 };
 
+exports.updateProfile = async function (req, res, next) {
+  const id = req.params.id;
+
+  try {
+    // prevent changing role
+    if (!req.body.role) {
+      delete req.body.role;
+    }
+
+    // prevent changing status
+    if (!req.body.isSuspended) {
+      delete req.body.isSuspended;
+    }
+
+    await db.User.findByIdAndUpdate(id, { ...req.body });
+
+    return res.status(200).json({ message: `Profile successfully updated.` });
+  } catch (err) {
+    // if validation fail
+    if (err.code === 11000) {
+      err.message = "Sorry, the username is used.";
+    }
+
+    return next({
+      status: 400,
+      message: err.message,
+    });
+  }
+};
+
 exports.deleteUser = async function (req, res, next) {
   try {
     const id = req.params.id;
@@ -65,7 +95,7 @@ exports.deleteUser = async function (req, res, next) {
       });
     }
 
-    await user.remove();
+    await user.deleteOne();
 
     return res.status(200).json({ message: `User ${user.username} deleted.` });
   } catch (err) {
@@ -81,17 +111,12 @@ exports.suspendUser = async function (req, res, next) {
     const id = req.params.id;
     const { isSuspended } = req.body;
 
-    if (!isSuspended) {
-      return next({
-        status: 422,
-        message: "Please clarify is it suspended or not.",
-      });
-    }
-
-    await db.User.findByIdAndUpdate(id, { isSuspended });
+    const user = await db.User.findByIdAndUpdate(id, { isSuspended });
 
     return res.status(200).json({
-      message: `User is ${isSuspended ? "suspended" : "unsuspended"}.`,
+      message: `User ${user.username} is ${
+        isSuspended ? "suspended" : "unsuspended"
+      }.`,
     });
   } catch (err) {
     return next({

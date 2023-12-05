@@ -127,7 +127,7 @@ exports.deleteTicket = async function (req, res, next) {
       });
     }
 
-    await ticket.remove();
+    await ticket.deleteOne();
 
     return res.status(200).json({ message: `Ticket deleted.` });
   } catch (err) {

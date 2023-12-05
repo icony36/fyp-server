@@ -32,17 +32,24 @@ exports.getStudentProfile = async function (req, res, next) {
   }
 };
 
-exports.getStudentProfileByUser = async function (req, res, next) {
+exports.getStudentProfilesByUser = async function (req, res, next) {
   try {
     const id = req.params.id;
 
-    const profiles = await db.StudentProfile.find({ studentId: id }).populate(
-      "studentId"
-    );
+    const profile = await db.StudentProfile.findOne({
+      studentId: id,
+    }).populate("studentId");
+
+    if (!profile) {
+      return next({
+        status: 422,
+        message: "The user id does not have a student profile.",
+      });
+    }
 
     return res
       .status(200)
-      .json({ message: `Data retrived succesfully.`, data: profiles });
+      .json({ message: `Data retrived succesfully.`, data: profile });
   } catch (err) {
     return next({
       status: 400,
@@ -73,7 +80,7 @@ exports.createStudentProfile = async function (req, res, next) {
 
     return res
       .status(200)
-      .json({ message: "Student profile created successfully." });
+      .json({ message: "Student account created successfully." });
   } catch (err) {
     if (err.name == "ValidationError") {
       const messageParts = err.message.split(": ");
@@ -106,6 +113,27 @@ exports.updateStudentProfile = async function (req, res, next) {
 
     return res
       .status(200)
+      .json({ message: `Student account successfully updated.` });
+  } catch (err) {
+    return next({
+      status: 400,
+      message: err.message,
+    });
+  }
+};
+
+exports.updateOwnStudentProfile = async function (req, res, next) {
+  try {
+    const id = req.params.id;
+
+    await db.StudentProfile.findOneAndUpdate(
+      { studentId: id },
+      { ...req.body },
+      { useFindAndModify: false }
+    );
+
+    return res
+      .status(200)
       .json({ message: `Student profile successfully updated.` });
   } catch (err) {
     return next({
@@ -128,9 +156,24 @@ exports.deleteStudentProfile = async function (req, res, next) {
       });
     }
 
-    await profile.remove();
+    await profile.deleteOne();
 
     return res.status(200).json({ message: `Student profile deleted.` });
+  } catch (err) {
+    return next({
+      status: 400,
+      message: err.message,
+    });
+  }
+};
+
+exports.deleteStudentProfilesByUser = async function (req, res, next) {
+  try {
+    const id = req.params.id;
+
+    await db.StudentProfile.deleteMany({ studentId: id });
+
+    return res.status(200).json({ message: `All student profiles deleted.` });
   } catch (err) {
     return next({
       status: 400,

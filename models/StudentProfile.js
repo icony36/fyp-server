@@ -5,12 +5,7 @@ const studentProfileSchema = new mongoose.Schema({
     type: String,
     required: [true, "Course is required."],
   },
-  enrollments: [
-    {
-      name: String,
-      id: String,
-    },
-  ],
+  enrollments: { type: Array, required: [true, "Enrollment is required."] },
   outstandingFee: {
     type: Number,
   },

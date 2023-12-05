@@ -22,7 +22,7 @@ exports.loginRequired = function (req, res, next) {
   }
 };
 
-exports.ensureCorrectUser = function (req, res, next) {
+exports.ensureSameUser = function (req, res, next) {
   try {
     const authHeader = req.headers.authorization || req.headers.Authorization;
     const token = authHeader.split(" ")[1];

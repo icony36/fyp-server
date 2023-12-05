@@ -16,9 +16,17 @@ const userSchema = new mongoose.Schema({
     enum: ["staff", "student", "admin"],
     required: [true, "Role is required."],
   },
-  name: {
+  email: {
     type: String,
-    required: [true, "Name is required."],
+    required: [true, "Email is required."],
+  },
+  firstName: {
+    type: String,
+    required: [true, "First name is required."],
+  },
+  lastName: {
+    type: String,
+    required: [true, "Last name is required."],
   },
   isSuspended: {
     type: Boolean,
@@ -42,6 +50,21 @@ userSchema.pre("save", async function (next) {
   }
 });
 
+userSchema.pre("findOneAndUpdate", async function (next) {
+  try {
+    if (this._update.password) {
+      const hashedPassword = await bcrypt.hash(this._update.password, 10);
+      this._update.password = hashedPassword;
+
+      return next();
+    }
+
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+});
+
 // function to check if password is correct
 userSchema.methods.comparePassword = async function (candidatePassword, next) {
   try {
@@ -54,19 +77,23 @@ userSchema.methods.comparePassword = async function (candidatePassword, next) {
 };
 
 // hook to delete user
-userSchema.pre("remove", async function (next) {
-  try {
-    // Delete all the StudentProfile with this user
-    await mongoose.model("StudentProfile").deleteMany({ studentId: this.id });
+userSchema.pre(
+  "deleteOne",
+  { document: true, query: false },
+  async function (next) {
+    try {
+      // delete all the StudentProfile with this user
+      await mongoose.model("StudentProfile").deleteMany({ studentId: this.id });
 
-    // Delete all the Ticket with this user
-    await mongoose.model("Ticket").deleteMany({ studentId: this.id });
+      // delete all the Ticket with this user
+      await mongoose.model("Ticket").deleteMany({ studentId: this.id });
 
-    return next();
-  } catch (err) {
-    return next(err);
+      return next();
+    } catch (err) {
+      return next(err);
+    }
   }
-});
+);
 
 const User = mongoose.model("User", userSchema);
 

@@ -36,7 +36,7 @@ exports.createKnowledge = async function (req, res, next) {
   try {
     const knowledge = await db.Knowledge.create(req.body);
 
-    return res.status(200).json(knowledge);
+    return res.status(200).json({ message: "Knowledge created successfully." });
   } catch (err) {
     // if validation fail
     if (err.code === 11000) {
@@ -95,7 +95,7 @@ exports.deleteKnowledge = async function (req, res, next) {
       });
     }
 
-    await knowledge.remove();
+    await knowledge.deleteOne();
 
     return res.status(200).json({ message: `Knowledge deleted!` });
   } catch (err) {

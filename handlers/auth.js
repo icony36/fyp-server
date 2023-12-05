@@ -4,9 +4,11 @@ const jwt = require("jsonwebtoken");
 exports.signup = async function (req, res, next) {
   try {
     // create user
-    await db.User.create(req.body);
+    const { _id } = await db.User.create(req.body);
 
-    return res.status(200).json({ message: "User created successfully." });
+    return res
+      .status(200)
+      .json({ userId: _id, message: "User created successfully." });
   } catch (err) {
     // if validation fail
     if (err.code === 11000) {
@@ -44,7 +46,7 @@ exports.signin = async function (req, res, next) {
 
     if (!user) {
       return next({
-        status: 400,
+        status: 422,
         message: "This account does not exist.",
       });
     }
@@ -55,7 +57,7 @@ exports.signin = async function (req, res, next) {
     if (isMatch) {
       if (isSuspended) {
         return next({
-          status: 400,
+          status: 401,
           message: "This account has been suspended.",
         });
       }
@@ -63,10 +65,12 @@ exports.signin = async function (req, res, next) {
       // create token
       const token = createToken(id, role);
 
-      return res.status(200).json({ token });
+      return res
+        .status(200)
+        .json({ message: "Logged in successfully.", data: { token } });
     } else {
       return next({
-        status: 400,
+        status: 401,
         message: "Incorrect username or password.",
       });
     }
