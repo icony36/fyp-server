@@ -9,6 +9,6 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/fyp", {
 });
 
 module.exports.User = require("./user");
-module.exports.StudentProfile = require("./studentProfile");
+module.exports.StudentProfile = require("./studentprofile");
 module.exports.Knowledge = require("./knowledge");
 module.exports.Ticket = require("./ticket");
