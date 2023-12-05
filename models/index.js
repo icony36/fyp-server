@@ -8,7 +8,7 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/fyp", {
   keepAlive: true,
 });
 
-module.exports.User = require("./User.js");
-module.exports.StudentProfile = require("./StudentProfile.js");
-module.exports.Knowledge = require("./Knowledge.js");
-module.exports.Ticket = require("./Ticket.js");
+module.exports.User = require("./user");
+module.exports.StudentProfile = require("./studentProfile");
+module.exports.Knowledge = require("./knowledge");
+module.exports.Ticket = require("./ticket");
