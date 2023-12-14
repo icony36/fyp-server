@@ -2,7 +2,7 @@ const db = require("../models");
 
 exports.getTickets = async function (req, res, next) {
   try {
-    const tickets = await db.Ticket.find({});
+    const tickets = await db.Ticket.find({}).populate("studentId");
 
     return res
       .status(200)

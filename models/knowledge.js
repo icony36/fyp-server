@@ -7,9 +7,13 @@ const knowledgeSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    labels: {
+      type: [String],
+      validate: [(v) => Array.isArray(v) && v.length > 0, "Label is required."],
+    },
     description: {
       type: String,
-      require: true,
+      required: true,
     },
   },
   { timestamps: true }

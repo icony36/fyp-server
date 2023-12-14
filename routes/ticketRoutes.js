@@ -18,7 +18,7 @@ router.route("/by-user/:id").get(getTicketsByUser);
 router.route("/:id").get(getTicket);
 router
   .route("/:id")
-  .put(loginRequired, ensureCorrectRole(["staff"]), updateTicket);
+  .put(loginRequired, ensureCorrectRole(["staff", "student"]), updateTicket);
 router
   .route("/:id")
   .delete(loginRequired, ensureCorrectRole(["staff"]), deleteTicket);
