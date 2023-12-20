@@ -11,4 +11,5 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/fyp", {
 module.exports.User = require("./user");
 module.exports.Knowledge = require("./knowledge");
 module.exports.Ticket = require("./ticket");
-module.exports.StudentProfile = require("./studentprofile");
+module.exports.StudentProfile = require("./student-profile");
+module.exports.TrainingData = require("./training-data");

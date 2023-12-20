@@ -9,7 +9,7 @@ const {
   deleteStudentProfile,
   deleteStudentProfilesByUser,
   updateOwnStudentProfile,
-} = require("../handlers/studentProfile");
+} = require("../handlers/student-profile");
 const {
   ensureCorrectRole,
   ensureSameUser,
