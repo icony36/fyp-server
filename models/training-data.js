@@ -1,13 +1,10 @@
 const mongoose = require("mongoose");
 
 const trainingDataSchema = new mongoose.Schema({
-  pipeline: [String],
-  policies: [String],
-  intents: [String],
-  entities: [String],
-  actions: [String],
-  forms: {},
+  intents: [],
   responses: [],
+  nodes: [],
+  edges: [],
 });
 
 const TrainingData = mongoose.model("TrainingData", trainingDataSchema);
