@@ -5,6 +5,7 @@ const trainingDataSchema = new mongoose.Schema({
   responses: [],
   nodes: [],
   edges: [],
+  config: String,
 });
 
 const TrainingData = mongoose.model("TrainingData", trainingDataSchema);

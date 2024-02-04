@@ -51,7 +51,7 @@ exports.signin = async function (req, res, next) {
       });
     }
 
-    const { id, role, isSuspended } = user;
+    const { id, role, username, isSuspended, firstName, lastName } = user;
 
     const isMatch = await user.comparePassword(req.body.password);
     if (isMatch) {
@@ -63,7 +63,7 @@ exports.signin = async function (req, res, next) {
       }
 
       // create token
-      const token = createToken(id, role);
+      const token = createToken(id, role, username, firstName, lastName);
 
       return res
         .status(200)
@@ -82,6 +82,9 @@ exports.signin = async function (req, res, next) {
   }
 };
 
-function createToken(id, role) {
-  return jwt.sign({ id, role }, process.env.JWT_KEY);
+function createToken(id, role, username, firstName, lastName) {
+  return jwt.sign(
+    { id, role, username, firstName, lastName },
+    process.env.JWT_KEY
+  );
 }

@@ -2,7 +2,9 @@ const db = require("../models");
 
 exports.getTickets = async function (req, res, next) {
   try {
-    const tickets = await db.Ticket.find({}).populate("studentId");
+    const tickets = await db.Ticket.find({})
+      .populate("studentId")
+      .populate({ path: "responses.senderId" });
 
     return res
       .status(200)
@@ -19,7 +21,9 @@ exports.getTicket = async function (req, res, next) {
   try {
     const id = req.params.id;
 
-    const ticket = await db.Ticket.findById(id).populate("studentId");
+    const ticket = await db.Ticket.findById(id)
+      .populate("studentId")
+      .populate({ path: "responses.senderId" });
 
     return res
       .status(200)
@@ -36,9 +40,9 @@ exports.getTicketsByUser = async function (req, res, next) {
   try {
     const id = req.params.id;
 
-    const tickets = await db.Ticket.find({ studentId: id }).populate(
-      "studentId"
-    );
+    const tickets = await db.Ticket.find({ studentId: id })
+      .populate("studentId")
+      .populate({ path: "responses.senderId" });
 
     return res
       .status(200)
