@@ -98,6 +98,10 @@ exports.updateTicket = async function (req, res, next) {
   try {
     const id = req.params.id;
 
+    if (req.body?.type === "close") {
+      req.body.status = "solved";
+    }
+
     await db.Ticket.findByIdAndUpdate(
       id,
       { ...req.body },
@@ -178,4 +182,22 @@ exports.solveTicket = async function (req, res, next) {
       message: err.message,
     });
   }
+};
+
+const setPriority = (tickets) => {
+  return tickets.map((el) => {
+    const timeDiff = new Date().getTime() - new Date(el.updatedAt).getTime();
+
+    const dayDiff = Math.round(timeDiff / (1000 * 3600 * 24));
+
+    if (dayDiff >= 14) {
+      el.priority = "high";
+    } else if (dayDiff >= 7 && dayDiff < 14) {
+      el.priority = "medium";
+    } else {
+      el.priority = "low";
+    }
+
+    return el;
+  });
 };
