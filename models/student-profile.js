@@ -15,6 +15,16 @@ const studentProfileSchema = new mongoose.Schema({
     required: [true, "Student ID is required."],
     cast: [null, (value) => `${value} is not a valid student id.`],
   },
+  timetable: [
+    {
+      moduleId: { type: String },
+      moduleName: { type: String },
+      lessonType: { type: String },
+      location: { type: String },
+      date: { type: String },
+      time: { type: String },
+    },
+  ],
 });
 
 const Knowledge = mongoose.model("StudentProfile", studentProfileSchema);

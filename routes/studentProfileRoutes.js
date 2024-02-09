@@ -9,6 +9,7 @@ const {
   deleteStudentProfile,
   deleteStudentProfilesByUser,
   updateOwnStudentProfile,
+  insertSamples,
 } = require("../handlers/student-profile");
 const {
   ensureCorrectRole,
@@ -38,5 +39,7 @@ router
 router
   .route("/student/:id")
   .put(loginRequired, ensureSameUser, updateOwnStudentProfile);
+
+router.route("/insert").post(insertSamples);
 
 module.exports = router;

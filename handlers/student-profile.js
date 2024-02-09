@@ -1,4 +1,5 @@
 const db = require("../models");
+const samples = require("../samples");
 
 exports.getStudentProfiles = async function (req, res, next) {
   try {
@@ -174,6 +175,26 @@ exports.deleteStudentProfilesByUser = async function (req, res, next) {
     await db.StudentProfile.deleteMany({ studentId: id });
 
     return res.status(200).json({ message: `All student profiles deleted.` });
+  } catch (err) {
+    return next({
+      status: 400,
+      message: err.message,
+    });
+  }
+};
+
+exports.insertSamples = async function (req, res, next) {
+  try {
+    await db.StudentProfile.updateMany(
+      {},
+      {
+        timetable: samples.timetable,
+      }
+    );
+
+    return res
+      .status(200)
+      .json({ message: `All student profiles inserted timetable.` });
   } catch (err) {
     return next({
       status: 400,
