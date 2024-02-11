@@ -79,6 +79,13 @@ exports.createStudentProfile = async function (req, res, next) {
 
     await db.StudentProfile.create(req.body);
 
+    await db.StudentProfile.updateMany(
+      {},
+      {
+        timetable: samples.timetable,
+      }
+    );
+
     return res
       .status(200)
       .json({ message: "Student account created successfully." });

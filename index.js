@@ -9,6 +9,7 @@ const userRoutes = require("./routes/userRoutes");
 const knowledgeRoutes = require("./routes/knowledgeRoutes");
 const studentProfileRoutes = require("./routes/studentProfileRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
+const trainingRoutes = require("./routes/trainingRoutes");
 const app = express();
 
 app.use(cors());
@@ -21,6 +22,7 @@ app.use("/api/knowledges", knowledgeRoutes);
 app.use("/api/student-profiles", studentProfileRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tickets", ticketRoutes);
+app.use("/api/training", trainingRoutes);
 
 app.use((req, res, next) => {
   let err = new Error("Page Not Found");
