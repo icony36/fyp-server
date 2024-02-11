@@ -6,7 +6,9 @@ const trainingDataSchema = new mongoose.Schema(
     responses: [],
     nodes: [],
     edges: [],
-    config: String,
+    config: {
+      type: String,
+    },
   },
   {
     timestamps: true,
