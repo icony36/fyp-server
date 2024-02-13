@@ -7,7 +7,7 @@ const trainingDataSchema = new mongoose.Schema(
     nodes: [],
     edges: [],
     config: {
-      type: String,
+      type: mongoose.SchemaTypes.Mixed,
     },
   },
   {
