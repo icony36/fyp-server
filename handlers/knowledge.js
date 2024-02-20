@@ -110,13 +110,15 @@ exports.searchKnowledge = async function (req, res, next) {
   try {
     const searchText = req.query.search;
 
-    const knowledges = await db.Knowledge.find({
-      $text: { $search: searchText },
+    let knowledges = await db.Knowledge.find({
+      labels: { $regex: searchText, $options: "i" }, // i for case insensitive
     });
 
-    // const knowledges = await db.Knowledge.find({
-    //   labels: { $regex: searchText, $options: "i" }, // i for case insensitive
-    // });
+    if (knowledges.length < 1) {
+      knowledges = await db.Knowledge.find({
+        $text: { $search: searchText },
+      });
+    }
 
     return res
       .status(200)
